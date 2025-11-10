@@ -79,7 +79,11 @@ def count_cards(cd):
 
 def eval_cards(cd):
     total_value = count_cards(cd)
-    joker_value = 10 if isjoker(cd) and total_value <= 21 else 0
+    joker_value = 0
+    if isjoker(cd):
+        joker_value=21-total_value
+        if joker_value>10:
+            joker_value=10
     return total_value + joker_value
 
 def print_players_line(cd):
@@ -87,9 +91,11 @@ def print_players_line(cd):
     while cd[i].mark:
         printcard(cd[i])
         i += 1
+
+    print(f"{i} cards ",end='')
     print("total={:3d} ".format(eval_cards(cd)), end='')
     if eval_cards(cd) == 21:
-        print("*BlackJick*")
+        print("*BlackJick*",end='')
     print()
 
 def print_comp():
@@ -97,7 +103,7 @@ def print_comp():
     while comp_cards[idx].mark:
         print("[###] ", end='')
         idx += 1
-    print("{} cards.".format(idx - 1))
+    print("{} cards.".format(idx))
 
 def game():
     cv = eval_cards(comp_cards)
