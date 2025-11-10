@@ -74,7 +74,7 @@ void printcard(card cd)
     static char *marks[]= {"","♥","♦","♣","♠","Joker"};
     static char *numbers[]= {"","A","2","3","4","5","6","7","8","9","10",
                              "J","Q","K" };
-    printf("[%s%s] ",marks[cd.mark],numbers[cd.number]);
+    printf("[%s %s] ",marks[cd.mark],numbers[cd.number]);
 }
 
 int count_cards(card cd[])
