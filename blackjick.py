@@ -161,14 +161,22 @@ def play():
         print("Have to draw ? {}.".format("Yes" if todrawp(player_cards) else "No"))
         s=""
         while not s:
-            s=input("0. Quit.\n1. Draw a card.\n2. Game.\n: ")
+            s=input("1. Draw a card.\n2. Game.\n3. Quit\n: ")
             try:
                 d = int(s)
             except:
+                d=0
+                s=""
+
+            if d == 3:
+                exit(0)
+
+            if d>3:
                 s=""
 
         if d == 1:
             draw_card(player_cards)
+
         computer_turn()
     while computer_turn():
         pass
