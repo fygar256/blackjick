@@ -6,6 +6,7 @@ class Card:
         self.mark = mark  # 0:no card 1:heart 2:dia 3:club 4:spade 5:joker
         self.number = number  # 1 ~ 13 0:joker
 
+JOKER_MARK=5
 trump = 53
 drawmax = 12
 cards = []
@@ -66,7 +67,10 @@ def isjoker(cd):
 def printcard(cd):
     marks = ["", "♥", "♦", "♣", "♠", "Joker"]
     numbers = ["", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-    print("[{} {}] ".format(marks[cd.mark], numbers[cd.number]), end='')
+    if cd.mark==JOKER_MARK:
+        print("[Joker] ",end='')
+    else:
+        print("[{} {}] ".format(marks[cd.mark], numbers[cd.number]), end='')
 
 def count_cards(cd):
     i = 0
@@ -155,7 +159,14 @@ def play():
         e = expected_value_of_next_card(player_cards)
         print(f"Expected value of next 1 card is {e:.8f}.")
         print("Have to draw ? {}.".format("Yes" if todrawp(player_cards) else "No"))
-        d = int(input("1. Draw a card.\n2. Game.\n: "))
+        s=""
+        while not s:
+            s=input("0. Quit.\n1. Draw a card.\n2. Game.\n: ")
+            try:
+                d = int(s)
+            except:
+                s=""
+
         if d == 1:
             draw_card(player_cards)
         computer_turn()
