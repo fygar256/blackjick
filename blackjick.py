@@ -35,11 +35,13 @@ def shuffle():
 def draw_card(cd):
     global cardidx
     i = 0
-    while cd[i].mark:
+    while i < drawmax and cd[i].mark:
         i += 1
     if cardidx < trump and i < drawmax:
         cd[i] = cards[cardidx]
         cardidx += 1
+        return True
+    return False
 
 def init_players():
     global comp_cards, player_cards
@@ -52,13 +54,13 @@ def init_players():
 
 def number_of_cards(cd):
     idx = 0
-    while cd[idx].mark:
+    while idx < drawmax and cd[idx].mark:
         idx += 1
     return idx
 
 def isjoker(cd):
     idx = 0
-    while cd[idx].mark:
+    while idx < drawmax and cd[idx].mark:
         if cd[idx].mark == 5:
             return 1
         idx += 1
@@ -75,7 +77,7 @@ def printcard(cd):
 def count_cards(cd):
     i = 0
     total_value = 0
-    while cd[i].mark:
+    while i < drawmax and cd[i].mark:
         n = cd[i].number
         total_value += n if n <= 10 else 10
         i += 1
@@ -92,7 +94,7 @@ def eval_cards(cd):
 
 def print_players_line(cd):
     i = 0
-    while cd[i].mark:
+    while i < drawmax and cd[i].mark:
         printcard(cd[i])
         i += 1
 
@@ -104,7 +106,7 @@ def print_players_line(cd):
 
 def print_comp():
     idx = 0
-    while comp_cards[idx].mark:
+    while idx < drawmax and comp_cards[idx].mark:
         print("[###] ", end='')
         idx += 1
     print("{} cards.".format(idx))
@@ -112,7 +114,7 @@ def print_comp():
 def game():
     cv = eval_cards(comp_cards)
     pv = eval_cards(player_cards)
-    if (cv == 21 and pv == 21) or cv == pv:
+    if cv == pv:
         if isjoker(comp_cards):
             return 2
         elif isjoker(player_cards):
@@ -131,17 +133,25 @@ def game():
         return 2
 
 def expected_value_of_next_card(self):
-    noc = trump - number_of_cards(self)
+    noc = trump - cardidx
+    if noc <= 0:
+        return 0.0
+
+    total_drawn_value = count_cards(comp_cards) + count_cards(player_cards)
+    remaining_value = 340 - total_drawn_value  # 340 = 通常52枚(J,Q,K=10)の合計値
+
+    joker_drawn = isjoker(comp_cards) or isjoker(player_cards)
     n = count_cards(self)
-    j = 0 if isjoker(self) else 0 if n >= 21 else 10 if n < 11 else 21 - n
-    return (340 + j - n) / noc
+    j = 0 if joker_drawn else (0 if n >= 21 else (10 if n < 11 else 21 - n))
+
+    return (remaining_value + j) / noc
 
 def todrawp(self):
     return 0 if eval_cards(self) >= 21 else 1 if count_cards(self) + expected_value_of_next_card(self) <= 21.0 else 0
 
 def computer_turn():
     global comp_cards
-    if todrawp(comp_cards):
+    if todrawp(comp_cards) and cardidx < trump and number_of_cards(comp_cards) < drawmax:
         print("Computer drew a card.")
         draw_card(comp_cards)
         return 1
@@ -190,7 +200,7 @@ def result(g):
     print(["Draw game", "Player win", "Computer win"][g])
 
 if __name__ == "__main__":
-    print("**********BlackJick ver 1.0**********")
+    print("**********BlackJick ver 1.0.1 (fixed)**********")
     shuffle()
     init_players()
     play()
