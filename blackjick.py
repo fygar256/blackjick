@@ -133,18 +133,19 @@ def game():
         return 2
 
 def expected_value_of_next_card(self):
-    noc = trump - cardidx
-    if noc <= 0:
+    own_value = count_cards(self)
+    own_count = number_of_cards(self)
+    unseen_cards = trump - own_count
+    if unseen_cards <= 0:
         return 0.0
 
-    total_drawn_value = count_cards(comp_cards) + count_cards(player_cards)
-    remaining_value = 340 - total_drawn_value  # 340 = 通常52枚(J,Q,K=10)の合計値
+    remaining_value = 340 - own_value
 
-    joker_drawn = isjoker(comp_cards) or isjoker(player_cards)
-    n = count_cards(self)
-    j = 0 if joker_drawn else (0 if n >= 21 else (10 if n < 11 else 21 - n))
+    joker_in_own_hand = isjoker(self)
+    n = own_value
+    j = 0 if joker_in_own_hand else (0 if n >= 21 else (10 if n < 11 else 21 - n))
 
-    return (remaining_value + j) / noc
+    return (remaining_value + j) / unseen_cards
 
 def todrawp(self):
     return 0 if eval_cards(self) >= 21 else 1 if count_cards(self) + expected_value_of_next_card(self) <= 21.0 else 0
