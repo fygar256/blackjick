@@ -6,9 +6,7 @@ so I stopped development and left the original program as 'BlackJick', since it 
 
 Jick is a black cat I used to have, and I left it on the wall of the kindergarten next door and went to the convenience store, and it disappeared. I dedicate this program to Jick.
 
-It is written in C and python. Both them will work the same.
-
-C: Download the source, compile it as `cc blackjick.c -o blackjick`, and run it as `./blackjick`.
+It is written in python.
 
 Python: Download the script. run it as `python blackjick.py`
 
