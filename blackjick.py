@@ -90,6 +90,8 @@ def eval_cards(cd):
         joker_value=21-total_value
         if joker_value>10:
             joker_value=10
+        if joker_value<0:
+            joker_value=0
     return total_value + joker_value
 
 def print_players_line(cd):
